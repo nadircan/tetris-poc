@@ -1,0 +1,127 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #1a1a2e;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.game-container {
+    display: flex;
+    gap: 20px;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(20, 30px);
+    border: 2px solid #16213e;
+    background-color: #0f3460;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.side-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 160px;
+}
+
+.info-box {
+    background-color: #16213e;
+    border: 1px solid #0f3460;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+}
+
+.info-box h3 {
+    font-size: 14px;
+    color: #a2a2a2;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.score-display,
+.level-display,
+.lines-display {
+    font-size: 28px;
+    font-weight: bold;
+    color: #e94560;
+}
+
+.next-piece-display {
+    display: grid;
+    grid-template-columns: repeat(4, 20px);
+    grid-template-rows: repeat(4, 20px);
+    justify-content: center;
+    min-height: 80px;
+}
+
+.next-cell {
+    width: 20px;
+    height: 20px;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.controls button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#start-btn {
+    background-color: #0f3460;
+    color: #e94560;
+}
+
+#start-btn:hover {
+    background-color: #1a4a8a;
+}
+
+#pause-btn {
+    background-color: #16213e;
+    color: #e94560;
+}
+
+#pause-btn:hover:not(:disabled) {
+    background-color: #1a2a4e;
+}
+
+#restart-btn {
+    background-color: #16213e;
+    color: #e94560;
+}
+
+#restart-btn:hover:not(:disabled) {
+    background-color: #1a2a4e;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -20,10 +20,6 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install linters
-        run: |
-          npm install -g eslint@9 stylelint html-validate
-
       - name: Check file structure
         run: |
           echo "::group::File Structure Check"
@@ -43,10 +39,8 @@ jobs:
           echo "::endgroup::"
 
       - name: HTML Validate
-        run: html-validate index.html
-
-      - name: CSS Lint
-        run: npx stylelint style.css --allow-empty-input || true
+        run: |
+          npx --yes html-validate index.html
 
       - name: JS Syntax Check
         run: node --check game.js

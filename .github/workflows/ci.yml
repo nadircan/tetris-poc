@@ -1,0 +1,66 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Lint & Validate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install linters
+        run: |
+          npm install -g eslint stylelint html-validate \
+            eslint-config-standard \
+            stylelint-config-standard
+
+      - name: Check file structure
+        run: |
+          echo "::group::File Structure Check"
+          missing=0
+          for f in index.html style.css game.js; do
+            if [ -f "$f" ]; then
+              echo "  [OK] $f"
+            else
+              echo "  [FAIL] $f missing!"
+              missing=1
+            fi
+          done
+          if [ $missing -eq 1 ]; then
+            echo "::error::Required files are missing!"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+      - name: HTML Validate
+        run: html-validate index.html
+        continue-on-error: true
+
+      - name: CSS Lint
+        run: stylelint style.css --allow-empty-input
+        continue-on-error: true
+
+      - name: JS Lint
+        run: eslint game.js --no-eslintrc --env browser --rule "{}" --warn
+        continue-on-error: true
+
+      - name: File sizes
+        run: |
+          echo "::group::File Sizes"
+          echo "  index.html: $(wc -c < index.html) bytes"
+          echo "  style.css:  $(wc -c < style.css) bytes"
+          echo "  game.js:    $(wc -c < game.js) bytes"
+          echo "  Total:      $(cat index.html style.css game.js | wc -c) bytes"
+          echo "::endgroup::"

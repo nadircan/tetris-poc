@@ -3,47 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetris PoC</title>
+    <title>Tetris</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
-        <div class="game-area">
-            <div id="game-board" class="board"></div>
-            <div id="game-over-overlay" class="game-over-overlay hidden">
-                <div class="game-over-content">
-                    <h2>Oyun Bitti!</h2>
-                    <p>Skor: <span id="final-score">0</span></p>
-                    <button id="play-again-btn">Tekrar Oyna</button>
+    <div class="game-wrapper">
+        <header class="game-header">
+            <h1 class="logo">TETRIS</h1>
+            <span class="logo-sub">POC</span>
+        </header>
+
+        <div class="game-container">
+            <div class="game-area">
+                <div id="game-board" class="board"></div>
+                <div id="game-over-overlay" class="game-over-overlay hidden">
+                    <div class="game-over-content">
+                        <div class="game-over-icon">&#9888;</div>
+                        <h2>Oyun Bitti!</h2>
+                        <div class="final-score">
+                            <span class="final-score-label">Skor</span>
+                            <span id="final-score" class="final-score-value">0</span>
+                        </div>
+                        <button id="play-again-btn" class="btn btn-primary btn-lg">Tekrar Oyna</button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="side-panel">
-            <div class="info-box">
-                <h3>Skor</h3>
-                <div id="score" class="score-display">0</div>
-            </div>
-            <div class="info-box">
-                <h3>Seviye</h3>
-                <div id="level" class="level-display">1</div>
-            </div>
-            <div class="info-box">
-                <h3>Satirlar</h3>
-                <div id="lines" class="lines-display">0</div>
-            </div>
-            <div class="info-box">
-                <h3>Hiz</h3>
-                <div id="speed-display" class="speed-display">1.0x</div>
-            </div>
-            <div class="info-box">
-                <h3>Sonraki</h3>
-                <div id="next-piece" class="next-piece-display"></div>
-            </div>
-            <div class="controls">
-                <button id="start-btn">Baslat</button>
-                <button id="pause-btn" disabled>Duraklat</button>
-                <button id="restart-btn" disabled>Yeniden Baslat</button>
-            </div>
+
+            <aside class="side-panel">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">&#9733;</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Skor</span>
+                            <span id="score" class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">&#9650;</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Seviye</span>
+                            <span id="level" class="stat-value">1</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">&#9776;</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Satir</span>
+                            <span id="lines" class="stat-value">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">&#9889;</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Hiz</span>
+                            <span id="speed-display" class="stat-value">1.0x</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="next-piece-card">
+                    <div class="card-header">
+                        <span class="card-title">Sonraki</span>
+                    </div>
+                    <div id="next-piece" class="next-piece-display"></div>
+                </div>
+
+                <div class="controls-card">
+                    <div class="card-header">
+                        <span class="card-title">Kontroller</span>
+                    </div>
+                    <div class="controls">
+                        <button id="start-btn" class="btn btn-success">
+                            <span class="btn-icon">&#9654;</span> Baslat
+                        </button>
+                        <button id="pause-btn" class="btn btn-warning" disabled>
+                            <span class="btn-icon">&#10074;&#10074;</span> Duraklat
+                        </button>
+                        <button id="restart-btn" class="btn btn-danger" disabled>
+                            <span class="btn-icon">&#8634;</span> Yeniden Baslat
+                        </button>
+                    </div>
+                </div>
+
+                <div class="shortcuts-card">
+                    <div class="card-header">
+                        <span class="card-title">Kisayollar</span>
+                    </div>
+                    <div class="shortcut-list">
+                        <div class="shortcut-item"><kbd>&#8592;&#8594;</kbd> Hareket</div>
+                        <div class="shortcut-item"><kbd>&#8593;</kbd> Dondur</div>
+                        <div class="shortcut-item"><kbd>&#8595;</kbd> Hizli dusus</div>
+                        <div class="shortcut-item"><kbd>Space</kbd> Sert dusus</div>
+                    </div>
+                </div>
+            </aside>
         </div>
     </div>
     <script src="game.js"></script>

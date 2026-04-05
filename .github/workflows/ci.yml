@@ -18,13 +18,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Install linters
         run: |
-          npm install -g eslint stylelint html-validate \
-            eslint-config-standard \
-            stylelint-config-standard
+          npm install -g eslint@9 stylelint html-validate
 
       - name: Check file structure
         run: |
@@ -46,15 +44,12 @@ jobs:
 
       - name: HTML Validate
         run: html-validate index.html
-        continue-on-error: true
 
       - name: CSS Lint
-        run: stylelint style.css --allow-empty-input
-        continue-on-error: true
+        run: npx stylelint style.css --allow-empty-input || true
 
-      - name: JS Lint
-        run: eslint game.js --no-eslintrc --env browser --rule "{}" --warn
-        continue-on-error: true
+      - name: JS Syntax Check
+        run: node --check game.js
 
       - name: File sizes
         run: |

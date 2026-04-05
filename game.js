@@ -135,12 +135,173 @@ function updateDisplay() {
     document.getElementById('lines').textContent = lines;
 }
 
+// Collision detection
+function isValidPosition(shape, row, col) {
+    for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+            if (shape[r][c]) {
+                const newRow = row + r;
+                const newCol = col + c;
+                if (newCol < 0 || newCol >= COLS || newRow >= ROWS) return false;
+                if (newRow >= 0 && board[newRow][newCol]) return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Rotate piece clockwise
+function rotatePiece() {
+    const shape = currentPiece.shape;
+    const n = shape.length;
+    const rotated = Array.from({ length: n }, () => Array(n).fill(0));
+    for (let r = 0; r < n; r++) {
+        for (let c = 0; c < n; c++) {
+            rotated[c][n - 1 - r] = shape[r][c];
+        }
+    }
+    if (isValidPosition(rotated, currentPiece.row, currentPiece.col)) {
+        currentPiece.shape = rotated;
+    }
+}
+
+// Move piece
+function movePiece(dRow, dCol) {
+    const newRow = currentPiece.row + dRow;
+    const newCol = currentPiece.col + dCol;
+    if (isValidPosition(currentPiece.shape, newRow, newCol)) {
+        currentPiece.row = newRow;
+        currentPiece.col = newCol;
+        return true;
+    }
+    return false;
+}
+
+// Hard drop
+function hardDrop() {
+    while (movePiece(1, 0)) {}
+    lockPiece();
+}
+
+// Lock piece to board
+function lockPiece() {
+    const { shape, color, row, col } = currentPiece;
+    for (let r = 0; r < shape.length; r++) {
+        for (let c = 0; c < shape[r].length; c++) {
+            if (shape[r][c]) {
+                const boardRow = row + r;
+                const boardCol = col + c;
+                if (boardRow >= 0 && boardRow < ROWS && boardCol >= 0 && boardCol < COLS) {
+                    board[boardRow][boardCol] = color;
+                }
+            }
+        }
+    }
+    spawnPiece();
+}
+
+// Spawn new piece
+function spawnPiece() {
+    currentPiece = nextPiece || randomPiece();
+    nextPiece = randomPiece();
+    if (!isValidPosition(currentPiece.shape, currentPiece.row, currentPiece.col)) {
+        gameOver();
+    }
+    render();
+}
+
+// Gravity tick
+function drop() {
+    if (!movePiece(1, 0)) {
+        lockPiece();
+    }
+    render();
+}
+
+// Start game
+function startGame() {
+    initBoard();
+    score = 0;
+    level = 1;
+    lines = 0;
+    gameRunning = true;
+    gamePaused = false;
+    dropSpeed = 1000;
+    updateDisplay();
+    spawnPiece();
+    startDropTimer();
+    document.getElementById('start-btn').disabled = true;
+    document.getElementById('pause-btn').disabled = false;
+    document.getElementById('restart-btn').disabled = false;
+}
+
+// Drop timer
+function startDropTimer() {
+    clearInterval(dropInterval);
+    dropInterval = setInterval(drop, dropSpeed);
+}
+
+// Pause / resume
+function togglePause() {
+    if (!gameRunning) return;
+    gamePaused = !gamePaused;
+    if (gamePaused) {
+        clearInterval(dropInterval);
+        document.getElementById('pause-btn').textContent = 'Devam Et';
+    } else {
+        startDropTimer();
+        document.getElementById('pause-btn').textContent = 'Duraklat';
+    }
+}
+
+// Restart
+function restartGame() {
+    clearInterval(dropInterval);
+    gameRunning = false;
+    startGame();
+}
+
+// Game over
+function gameOver() {
+    clearInterval(dropInterval);
+    gameRunning = false;
+    document.getElementById('pause-btn').disabled = true;
+    alert('Oyun Bitti! Skor: ' + score);
+}
+
+// Keyboard controls
+document.addEventListener('keydown', (e) => {
+    if (!gameRunning || gamePaused) return;
+    switch (e.key) {
+        case 'ArrowLeft':
+            movePiece(0, -1);
+            break;
+        case 'ArrowRight':
+            movePiece(0, 1);
+            break;
+        case 'ArrowDown':
+            movePiece(1, 0);
+            break;
+        case 'ArrowUp':
+            rotatePiece();
+            break;
+        case ' ':
+            hardDrop();
+            break;
+    }
+    render();
+});
+
 // Init
 function init() {
     createBoardCells();
     createNextPieceCells();
     initBoard();
     updateDisplay();
+
+    document.getElementById('start-btn').addEventListener('click', startGame);
+    document.getElementById('pause-btn').addEventListener('click', togglePause);
+    document.getElementById('restart-btn').addEventListener('click', restartGame);
 }
 
 document.addEventListener('DOMContentLoaded', init);

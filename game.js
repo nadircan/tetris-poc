@@ -317,7 +317,14 @@ function gameOver() {
     clearInterval(dropInterval);
     gameRunning = false;
     document.getElementById('pause-btn').disabled = true;
-    alert('Oyun Bitti! Skor: ' + score);
+    document.getElementById('final-score').textContent = score;
+    document.getElementById('game-over-overlay').classList.remove('hidden');
+}
+
+// Play again
+function playAgain() {
+    document.getElementById('game-over-overlay').classList.add('hidden');
+    startGame();
 }
 
 // Keyboard controls
@@ -353,6 +360,7 @@ function init() {
     document.getElementById('start-btn').addEventListener('click', startGame);
     document.getElementById('pause-btn').addEventListener('click', togglePause);
     document.getElementById('restart-btn').addEventListener('click', restartGame);
+    document.getElementById('play-again-btn').addEventListener('click', playAgain);
 }
 
 document.addEventListener('DOMContentLoaded', init);

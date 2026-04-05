@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tetris PoC</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="game-area">
+            <div id="game-board" class="board"></div>
+        </div>
+        <div class="side-panel">
+            <div class="info-box">
+                <h3>Skor</h3>
+                <div id="score" class="score-display">0</div>
+            </div>
+            <div class="info-box">
+                <h3>Seviye</h3>
+                <div id="level" class="level-display">1</div>
+            </div>
+            <div class="info-box">
+                <h3>Satirlar</h3>
+                <div id="lines" class="lines-display">0</div>
+            </div>
+            <div class="info-box">
+                <h3>Sonraki</h3>
+                <div id="next-piece" class="next-piece-display"></div>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Baslat</button>
+                <button id="pause-btn" disabled>Duraklat</button>
+                <button id="restart-btn" disabled>Yeniden Baslat</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>

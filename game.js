@@ -238,7 +238,7 @@ function clearLines() {
         }
     }
     if (cleared > 0) {
-        const points = (SCORE_TABLE[cleared] || cleared * 100) * level;
+        const points = 100 * level;
         score += points;
         lines += cleared;
         const newLevel = Math.floor(lines / LINES_PER_LEVEL) + 1;

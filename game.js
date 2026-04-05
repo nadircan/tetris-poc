@@ -27,6 +27,9 @@ let gamePaused = false;
 let dropInterval = null;
 let dropSpeed = 1000;
 
+const SCORE_TABLE = { 1: 100, 2: 300, 3: 500, 4: 800 };
+const LINES_PER_LEVEL = 10;
+
 // Board init
 function initBoard() {
     board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
@@ -219,7 +222,33 @@ function lockPiece() {
             }
         }
     }
+    clearLines();
     spawnPiece();
+}
+
+// Clear completed lines and update score
+function clearLines() {
+    let cleared = 0;
+    for (let r = ROWS - 1; r >= 0; r--) {
+        if (board[r].every(cell => cell !== 0)) {
+            board.splice(r, 1);
+            board.unshift(Array(COLS).fill(0));
+            cleared++;
+            r++; // recheck this row
+        }
+    }
+    if (cleared > 0) {
+        const points = (SCORE_TABLE[cleared] || cleared * 100) * level;
+        score += points;
+        lines += cleared;
+        const newLevel = Math.floor(lines / LINES_PER_LEVEL) + 1;
+        if (newLevel > level) {
+            level = newLevel;
+            dropSpeed = Math.max(100, 1000 - (level - 1) * 100);
+            startDropTimer();
+        }
+        updateDisplay();
+    }
 }
 
 // Spawn new piece

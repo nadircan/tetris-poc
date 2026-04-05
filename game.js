@@ -150,18 +150,40 @@ function isValidPosition(shape, row, col) {
     return true;
 }
 
-// Rotate piece clockwise
-function rotatePiece() {
-    const shape = currentPiece.shape;
-    const n = shape.length;
+// Wall kick offsets to try when rotation collides
+const WALL_KICKS = [
+    [0, 0],   // no offset
+    [0, -1],  // shift left
+    [0, 1],   // shift right
+    [0, -2],  // shift left 2 (for I piece)
+    [0, 2],   // shift right 2 (for I piece)
+    [-1, 0],  // shift up
+    [-1, -1], // shift up-left
+    [-1, 1],  // shift up-right
+];
+
+// Rotate matrix clockwise
+function rotateMatrix(matrix) {
+    const n = matrix.length;
     const rotated = Array.from({ length: n }, () => Array(n).fill(0));
     for (let r = 0; r < n; r++) {
         for (let c = 0; c < n; c++) {
-            rotated[c][n - 1 - r] = shape[r][c];
+            rotated[c][n - 1 - r] = matrix[r][c];
         }
     }
-    if (isValidPosition(rotated, currentPiece.row, currentPiece.col)) {
-        currentPiece.shape = rotated;
+    return rotated;
+}
+
+// Rotate piece clockwise with wall kick
+function rotatePiece() {
+    const rotated = rotateMatrix(currentPiece.shape);
+    for (const [dr, dc] of WALL_KICKS) {
+        if (isValidPosition(rotated, currentPiece.row + dr, currentPiece.col + dc)) {
+            currentPiece.shape = rotated;
+            currentPiece.row += dr;
+            currentPiece.col += dc;
+            return;
+        }
     }
 }
 

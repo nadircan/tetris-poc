@@ -30,6 +30,21 @@ let dropSpeed = 1000;
 const SCORE_TABLE = { 1: 100, 2: 300, 3: 500, 4: 800 };
 const LINES_PER_LEVEL = 10;
 
+// Speed increases at these score thresholds (score -> dropSpeed ms)
+const SPEED_THRESHOLDS = [
+    { score: 0,    speed: 1000 },
+    { score: 500,  speed: 900  },
+    { score: 1000, speed: 800  },
+    { score: 2000, speed: 700  },
+    { score: 3500, speed: 600  },
+    { score: 5000, speed: 500  },
+    { score: 7500, speed: 400  },
+    { score: 10000, speed: 300 },
+    { score: 15000, speed: 200 },
+    { score: 25000, speed: 150 },
+    { score: 40000, speed: 100 },
+];
+
 // Board init
 function initBoard() {
     board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
@@ -136,6 +151,36 @@ function updateDisplay() {
     document.getElementById('score').textContent = score;
     document.getElementById('level').textContent = level;
     document.getElementById('lines').textContent = lines;
+    updateSpeedDisplay();
+}
+
+// Calculate speed from score
+function getSpeedForScore(s) {
+    let speed = 1000;
+    for (const t of SPEED_THRESHOLDS) {
+        if (s >= t.score) speed = t.speed;
+    }
+    return speed;
+}
+
+// Update speed based on current score
+function updateSpeedFromScore() {
+    const newSpeed = getSpeedForScore(score);
+    if (newSpeed !== dropSpeed) {
+        dropSpeed = newSpeed;
+        if (gameRunning && !gamePaused) {
+            startDropTimer();
+        }
+    }
+}
+
+// Update speed display
+function updateSpeedDisplay() {
+    const el = document.getElementById('speed-display');
+    if (el) {
+        const cellsPerSec = Math.round(1000 / dropSpeed * 10) / 10;
+        el.textContent = cellsPerSec + 'x';
+    }
 }
 
 // Collision detection
@@ -244,9 +289,8 @@ function clearLines() {
         const newLevel = Math.floor(lines / LINES_PER_LEVEL) + 1;
         if (newLevel > level) {
             level = newLevel;
-            dropSpeed = Math.max(100, 1000 - (level - 1) * 100);
-            startDropTimer();
         }
+        updateSpeedFromScore();
         updateDisplay();
     }
 }

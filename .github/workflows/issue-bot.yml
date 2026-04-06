@@ -1,0 +1,42 @@
+name: Issue Bot
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  comment:
+    name: Auto Comment
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Add comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const label = context.payload.issue.labels?.map(l => l.name) || [];
+            const hasClaude = label.includes('claude');
+
+            let body;
+            if (hasClaude) {
+              body = `Merhaba! Bu issue \`claude\` label'i ile isaretlendi.\n\n` +
+                `Claude Code bu issue'yu inceleyecek ve uygun bir cozum uretecek. Asagidaki adimlar izlenecek:\n\n` +
+                `1. Issue'nun gereksinimleri analiz edilecek\n` +
+                `2. Yeni bir branch olusturulacak\n` +
+                `3. Kod implement edilecek\n` +
+                `4. PR acilacak ve self-review yapilacak\n` +
+                `5. CI + Deploy pipeline'lar tetiklenecek\n\n` +
+                `Lutfen bekleyin, yakinda baslaniyor!`;
+            } else {
+              body = `Tesekkurler! Issue'nuzu aldik. Ekibimiz en kisa surede inceleyecek.\n\n` +
+                `> _Bu yorum otomatik olarak olusturulmustur._`;
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });

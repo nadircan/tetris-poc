@@ -394,8 +394,28 @@ document.addEventListener('keydown', (e) => {
     render();
 });
 
+// Theme management
+function initTheme() {
+    const saved = localStorage.getItem('tetris-theme');
+    if (saved === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+}
+
+function toggleTheme() {
+    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+    if (isLight) {
+        document.documentElement.removeAttribute('data-theme');
+        localStorage.setItem('tetris-theme', 'dark');
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('tetris-theme', 'light');
+    }
+}
+
 // Init
 function init() {
+    initTheme();
     createBoardCells();
     createNextPieceCells();
     initBoard();
@@ -405,6 +425,7 @@ function init() {
     document.getElementById('pause-btn').addEventListener('click', togglePause);
     document.getElementById('restart-btn').addEventListener('click', restartGame);
     document.getElementById('play-again-btn').addEventListener('click', playAgain);
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
 }
 
 document.addEventListener('DOMContentLoaded', init);

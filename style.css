@@ -27,6 +27,44 @@
     --shadow-glow: 0 0 20px var(--accent-glow);
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --cell-border: rgba(255, 255, 255, 0.02);
+    --cell-inner: rgba(255, 255, 255, 0.12);
+    --cell-shadow: rgba(0, 0, 0, 0.4);
+    --overlay-bg: rgba(15, 15, 26, 0.92);
+    --next-piece-bg: rgba(15, 15, 26, 0.5);
+    --kbd-bg: rgba(255, 255, 255, 0.06);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-card: rgba(255, 255, 255, 0.8);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    --border-subtle: rgba(0, 0, 0, 0.08);
+    --border-accent: rgba(99, 102, 241, 0.35);
+    --text-primary: #1e293b;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --accent: #6366f1;
+    --accent-light: #818cf8;
+    --accent-glow: rgba(99, 102, 241, 0.2);
+    --success: #16a34a;
+    --success-bg: rgba(34, 197, 94, 0.1);
+    --warning: #d97706;
+    --warning-bg: rgba(245, 158, 11, 0.1);
+    --danger: #dc2626;
+    --danger-bg: rgba(239, 68, 68, 0.08);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+    --cell-border: rgba(0, 0, 0, 0.06);
+    --cell-inner: rgba(255, 255, 255, 0.3);
+    --cell-shadow: rgba(0, 0, 0, 0.15);
+    --overlay-bg: rgba(248, 250, 252, 0.92);
+    --next-piece-bg: rgba(241, 245, 249, 0.8);
+    --kbd-bg: rgba(0, 0, 0, 0.06);
 }
 
 * {
@@ -51,17 +89,66 @@ body {
 }
 
 /* Header */
+.game-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+    margin-left: auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-card);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+}
+
+.theme-toggle:hover {
+    border-color: var(--border-accent);
+    box-shadow: var(--shadow-glow);
+    transform: rotate(15deg);
+}
+
+.theme-icon-dark,
+.theme-icon-light {
+    position: absolute;
+    font-size: 20px;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.theme-icon-light {
+    opacity: 0;
+    transform: scale(0.5) rotate(-30deg);
+}
+
+.theme-icon-dark {
+    opacity: 1;
+    transform: scale(1);
+}
+
+[data-theme="light"] .theme-icon-dark {
+    opacity: 0;
+    transform: scale(0.5) rotate(30deg);
+}
+
+[data-theme="light"] .theme-icon-light {
+    opacity: 1;
+    transform: scale(1);
+}
 .game-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 20px;
-}
-
-.game-header {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
 }
 
 .logo {
@@ -111,16 +198,16 @@ body {
 .cell {
     width: 30px;
     height: 30px;
-    border: 1px solid rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--cell-border);
 }
 
 .cell[style*="background-color"] {
     border-radius: 3px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-subtle);
     box-shadow:
-        inset 0 -3px 6px rgba(0, 0, 0, 0.4),
-        inset 0 3px 6px rgba(255, 255, 255, 0.12),
-        0 0 4px rgba(255, 255, 255, 0.05);
+        inset 0 -3px 6px var(--cell-shadow),
+        inset 0 3px 6px var(--cell-inner),
+        0 0 4px var(--accent-glow);
 }
 
 @keyframes lineClear {
@@ -225,7 +312,7 @@ body {
     grid-template-rows: repeat(4, 24px);
     justify-content: center;
     min-height: 96px;
-    background: rgba(15, 15, 26, 0.5);
+    background: var(--next-piece-bg);
     border-radius: var(--radius-md);
     padding: 8px;
     border: 1px solid var(--border-subtle);
@@ -378,7 +465,7 @@ kbd {
     padding: 2px 6px;
     font-family: var(--font-mono);
     font-size: 11px;
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--kbd-bg);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-sm);
     color: var(--text-primary);
@@ -391,7 +478,7 @@ kbd {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(15, 15, 26, 0.92);
+    background: var(--overlay-bg);
     backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;

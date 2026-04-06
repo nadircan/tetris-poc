@@ -1,0 +1,79 @@
+name: Auto Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: prev-tag
+        run: |
+          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          echo "prev=$PREV" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -n "${{ steps.prev-tag.outputs.prev }}" ]; then
+            LOG=$(git log ${{ steps.prev-tag.outputs.prev }}..HEAD --pretty=format:"- %s (%h)" --no-merges)
+          else
+            LOG=$(git log --pretty=format:"- %s (%h)" --no-merges -20)
+          fi
+
+          # Categorize commits
+          FEAT=$(echo "$LOG" | grep -i "^- feat" || true)
+          FIX=$(echo "$LOG" | grep -i "^- fix" || true)
+          CHORE=$(echo "$LOG" | grep -i "^- chore\|^- ci\|^- docs\|^- style\|^- refactor" || true)
+          OTHER=$(echo "$LOG" | grep -v -i "^- feat\|^- fix\|^- chore\|^- ci\|^- docs\|^- style\|^- refactor" || true)
+
+          {
+            echo "body<<EOF"
+            echo "## Neler Degisti?"
+            echo ""
+            if [ -n "$FEAT" ]; then
+              echo "### Yeni Ozellikler"
+              echo "$FEAT"
+              echo ""
+            fi
+            if [ -n "$FIX" ]; then
+              echo "### Hata Duzeltmeleri"
+              echo "$FIX"
+              echo ""
+            fi
+            if [ -n "$CHORE" ]; then
+              echo "### Bakim & Altyapi"
+              echo "$CHORE"
+              echo ""
+            fi
+            if [ -n "$OTHER" ]; then
+              echo "### Diger"
+              echo "$OTHER"
+              echo ""
+            fi
+            echo "---"
+            echo ""
+            echo "**Tum degisiklikler**: https://github.com/nadircan/tetris-poc/compare/${{ steps.prev-tag.outputs.prev }}...${{ github.ref_name }}"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-rc') || contains(github.ref_name, '-beta') }}

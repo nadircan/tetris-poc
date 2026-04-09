@@ -5,13 +5,13 @@ const ROWS = 20;
 const BLOCK_SIZE = 30;
 
 const TETROMINOS = {
-    I: { shape: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], color: '#38bdf8' },
-    O: { shape: [[1,1],[1,1]], color: '#facc15' },
-    T: { shape: [[0,1,0],[1,1,1],[0,0,0]], color: '#c084fc' },
-    S: { shape: [[0,1,1],[1,1,0],[0,0,0]], color: '#4ade80' },
-    Z: { shape: [[1,1,0],[0,1,1],[0,0,0]], color: '#f87171' },
-    J: { shape: [[1,0,0],[1,1,1],[0,0,0]], color: '#60a5fa' },
-    L: { shape: [[0,0,1],[1,1,1],[0,0,0]], color: '#fb923c' }
+    I: { shape: [[0,0,0,0],[1,1,1,1],[0,0,0,0],[0,0,0,0]], color: '#f472b6' },
+    O: { shape: [[1,1],[1,1]], color: '#ec4899' },
+    T: { shape: [[0,1,0],[1,1,1],[0,0,0]], color: '#f9a8d4' },
+    S: { shape: [[0,1,1],[1,1,0],[0,0,0]], color: '#f472b6' },
+    Z: { shape: [[1,1,0],[0,1,1],[0,0,0]], color: '#ec4899' },
+    J: { shape: [[1,0,0],[1,1,1],[0,0,0]], color: '#f9a8d4' },
+    L: { shape: [[0,0,1],[1,1,1],[0,0,0]], color: '#f472b6' }
 };
 
 const TETROMINO_NAMES = Object.keys(TETROMINOS);
